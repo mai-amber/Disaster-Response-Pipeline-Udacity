@@ -23,7 +23,7 @@ from sklearn.base import BaseEstimator,TransformerMixin
 
 def load_data(database_filepath):
     engine = create_engine('sqlite:///' + database_filepath)
-    df = pd.read_sql_table(database_filepath, engine)
+    df = pd.read_sql_table('DisasterResponse', engine)
     X =  df['message']
     Y = df.drop(['message', 'genre', 'id', 'original'], axis=1)
     Y= Y.astype(int)
@@ -47,20 +47,23 @@ def tokenize(text):
 def build_model():
     pipeline = Pipeline([
     ('tfidf', TfidfVectorizer(tokenizer=tokenize)),
-    ('clf', RandomForestClassifier())
+    ('clf', MultiOutputClassifier(RandomForestClassifier()))
     ])
     
-    return pipeline
+    parameters = {'clf__estimator__max_depth': [10, 50, None],
+              'clf__estimator__min_samples_leaf':[2, 5, 10]}
+
+    cv = GridSearchCV(pipeline, parameters)
+    return cv
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
-    Y_pred = pipeline.predict(X_test)
-    for i in enumerate(Y_test):
-        print(classification_report(Y_test, Y_pred))
+    Y_pred = model.predict(X_test)
+    print(classification_report(Y_test, Y_pred, target_names=category_names))
+    results = pd.DataFrame(columns=['Category', 'f_score', 'precision', 'recall'])       
 
-
-def save_model(pipeline, model_filepath):
-    pickle.dump(pipeline,open(model_filepath,'wb'))
+def save_model(model, model_filepath):
+    pickle.dump(model, open(model_filepath,'wb'))
 
 
 def main():

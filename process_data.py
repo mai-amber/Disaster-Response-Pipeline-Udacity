@@ -19,7 +19,7 @@ def clean_data(df):
         categories[column] = categories[column].str[-1:]
         categories[column] = categories[column].astype(int)
     
-    df.drop('categories', 1)
+    df.drop('categories', 1,inplace=True)
     df = pd.concat([df, categories], axis=1)
     df.drop_duplicates(subset='message')
     
@@ -29,7 +29,7 @@ def clean_data(df):
 
 def save_data(df, database_filename):
     engine = create_engine('sqlite:///'+ database_filename)
-    df.to_sql(database_filename, engine, index=False, if_exists='replace')  
+    df.to_sql('DisasterResponse', engine, index=False, if_exists='replace')  
 
 
 def main():
