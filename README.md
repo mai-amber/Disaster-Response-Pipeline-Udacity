@@ -1,4 +1,4 @@
-# Disaster-Response-Pipeline-Udacity
+# Disaster Response Pipeline
 
 ## A summary of the project:
 
