@@ -22,7 +22,7 @@ from sklearn.base import BaseEstimator,TransformerMixin
 
 
 def load_data(database_filepath):
-     '''loading the data'''
+    '''loading the data'''
     engine = create_engine('sqlite:///' + database_filepath)
     df = pd.read_sql_table('DisasterResponse', engine)
     X =  df['message']

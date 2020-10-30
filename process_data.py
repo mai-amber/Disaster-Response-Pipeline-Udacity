@@ -12,7 +12,7 @@ def load_data(messages_filepath, categories_filepath):
 
 
 def clean_data(df):
-     '''cleaning the data'''
+    '''cleaning the data'''
     categories = df["categories"].str.split(';', expand=True)
     row = categories.iloc[0,:]
     category_colnames = row.apply(lambda x: x[:len(x) - 2])
